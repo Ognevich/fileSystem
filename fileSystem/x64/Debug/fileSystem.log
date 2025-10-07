@@ -1,4 +1,7 @@
 ﻿  FileSystem.cpp
+  Parser.cpp
+  main.cpp
+  Generating Code...
   fileSystem.vcxproj -> D:\my_projects\c++\Projects\fileSystem\x64\Debug\fileSystem.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.

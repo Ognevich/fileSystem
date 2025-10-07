@@ -23,7 +23,9 @@ void FileSystem::update()
 {
 	std::string command;
 	std::cout << currentDir->getPath() << "> ";
-	std::cin >> command;
-	Directory* dir = new Directory("dir1", root);
-	currentDir->addDirectory(dir);
+	std::getline(std::cin, command);
+	std::vector<std::string> args = parser.split(command);
+	for (auto it = args.begin(); it != args.end(); ++it) {
+		std::cout << *it << std::endl;
+	}
 }

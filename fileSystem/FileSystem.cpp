@@ -4,6 +4,7 @@ FileSystem::FileSystem()
 	: root(new Directory("root", nullptr)), 
 	currentDir(root)
 {
+	initCommands();
 }
 
 FileSystem::~FileSystem()
@@ -11,6 +12,11 @@ FileSystem::~FileSystem()
 	delete root;
 }
 
+
+void FileSystem::initCommands()
+{
+	commands["pwd"] = [this]() {pwd(); };
+}
 
 void FileSystem::run()
 {
@@ -24,8 +30,17 @@ void FileSystem::update()
 	std::string command;
 	std::cout << currentDir->getPath() << "> ";
 	std::getline(std::cin, command);
-	std::vector<std::string> args = parser.split(command);
-	for (auto it = args.begin(); it != args.end(); ++it) {
-		std::cout << *it << std::endl;
+
+	if (commands.contains(command)) {
+		commands[command]();
 	}
+	else {
+		std::cout << "unknown command " << command << "\n";
+	}
+
+}
+
+void FileSystem::pwd()
+{
+	std::cout << currentDir->getName() << std::endl;
 }

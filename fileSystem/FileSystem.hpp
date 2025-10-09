@@ -25,6 +25,7 @@ public:
 	void update();
 
 	void pwd();
+	void ls();
 };
 #endif
 

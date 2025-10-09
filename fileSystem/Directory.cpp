@@ -38,6 +38,11 @@ void Directory::addDirectory(Directory* dir)
 	subdirectories.push_back(dir);
 }
 
+std::vector<Directory*> Directory::getSubdirectories()
+{
+	return this->subdirectories;
+}
+
 Directory* Directory::getSubdirectory(std::string name)
 {
 	for (Directory* dir : subdirectories) {

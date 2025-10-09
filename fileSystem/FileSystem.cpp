@@ -16,6 +16,7 @@ FileSystem::~FileSystem()
 void FileSystem::initCommands()
 {
 	commands["pwd"] = [this]() {pwd(); };
+	commands["ls"] = [this]() {ls(); };
 }
 
 void FileSystem::run()
@@ -43,4 +44,13 @@ void FileSystem::update()
 void FileSystem::pwd()
 {
 	std::cout << currentDir->getName() << std::endl;
+}
+
+void FileSystem::ls()
+{
+	std::vector<Directory*> subdirectories;
+
+	for (auto it = subdirectories.begin(); it != subdirectories.end(); ++it) {
+		std::cout << (*it)->getName() << "\n";
+	}
 }

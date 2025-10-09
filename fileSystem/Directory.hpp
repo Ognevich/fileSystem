@@ -22,6 +22,7 @@ public:
 	void addFile(File * file);
 	void addDirectory(Directory* dir);
 
+	std::vector<Directory*> getSubdirectories();
 	Directory* getSubdirectory(std::string name);
 	Directory* getParent();
 	std::string getName();

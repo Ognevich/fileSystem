@@ -28,7 +28,7 @@ public:
 	std::string getName();
 	std::string getPath();
 
-
+	bool isSubdirectoryExists(std::string name);
 	bool removeFile(std::string name);
 };
 

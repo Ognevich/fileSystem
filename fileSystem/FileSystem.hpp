@@ -2,7 +2,9 @@
 #define _FILE_SYSTEM_HPP_
 #include <map>
 #include <string>
+#include <memory>
 #include <functional>
+#include "Config.hpp"
 #include "File.hpp"
 #include "Directory.hpp"
 #include "Parser.hpp"
@@ -10,11 +12,17 @@
 
 class FileSystem {
 private:
+	enum class ProgramState {
+		RUN_PROGRAM,
+		STOP_PROGRAM
+	};
 
 	Directory* root;
 	Directory* currentDir;
-	Parser parser;
-	std::map<std::string, std::function<void()>> commands;
+	std::shared_ptr<Parser> parser;
+	std::map < std::string, std::function<void(std::vector<std::string>&) >> commands;
+
+	ProgramState programState;
 
 public:
 	FileSystem();
@@ -24,8 +32,12 @@ public:
 	void run();
 	void update();
 
-	void pwd();
-	void ls();
+	// COMMANDS
+	void pwd(std::vector<std::string>& args);
+	void ls(std::vector<std::string>& args);
+	void mkdir(std::vector<std::string>& args);
+	void exit(std::vector<std::string>& args);
+	void cd(std::vector<std::string>& args);
 };
 #endif
 

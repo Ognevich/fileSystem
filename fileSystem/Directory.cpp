@@ -72,6 +72,15 @@ std::string Directory::getPath()
 
 }
 
+bool Directory::isSubdirectoryExists(std::string name)
+{
+	for (auto it = subdirectories.begin(); it != subdirectories.end(); ++it) {
+		if ((*it)->getName() == name)
+			return true;
+	}
+	return false;
+}
+
 bool Directory::removeFile(std::string name)
 {
 	for (auto it = files.begin(); it != files.end(); ++it) {

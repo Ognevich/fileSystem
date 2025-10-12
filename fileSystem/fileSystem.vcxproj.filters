@@ -33,6 +33,9 @@
     <ClCompile Include="Parser.cpp">
       <Filter>Source Files\scr</Filter>
     </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Directory.hpp">
@@ -48,6 +51,9 @@
       <Filter>Source Files\scr</Filter>
     </ClInclude>
     <ClInclude Include="Config.hpp">
+      <Filter>Source Files\scr</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.hpp">
       <Filter>Source Files\scr</Filter>
     </ClInclude>
   </ItemGroup>

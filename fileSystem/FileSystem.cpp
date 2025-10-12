@@ -6,6 +6,7 @@ FileSystem::FileSystem()
 	parser(std::make_shared<Parser>()),
 	programState(ProgramState::RUN_PROGRAM)
 {
+    util.startMsg();
 	initCommands();
 }
 
@@ -22,6 +23,8 @@ void FileSystem::initCommands()
 	commands["mkdir"] = [this](std::vector<std::string>& args) {mkdir(args); };
 	commands["exit"] = [this](std::vector<std::string>& args) {exit(args); };
 	commands["cd"] = [this](std::vector<std::string>& args) {cd(args); };
+    commands["clear"] = [this](std::vector<std::string>& args) {clear(args); };
+    commands["help"] = [this](std::vector<std::string>& args) {help(args); };
 }
 
 void FileSystem::run()
@@ -38,6 +41,9 @@ void FileSystem::update()
 	std::getline(std::cin, line);
 
 	std::vector<std::string> args = parser->split(line, ARG_DIVIDER);
+	if (args.empty()) {
+		return;
+	}
 	std::string command = args[0];
 	args.erase(args.begin());
 
@@ -60,8 +66,9 @@ void FileSystem::ls(std::vector<std::string>& args)
 	std::vector<Directory*> subdirectories = currentDir->getSubdirectories();
 
 	for (auto it = subdirectories.begin(); it != subdirectories.end(); ++it) {
-		std::cout << (*it)->getName() << "\n";
+		std::cout << (*it)->getName() << "\t";
 	}
+	std::cout << "\n";
 }
 
 void FileSystem::mkdir(std::vector<std::string>& args)
@@ -82,28 +89,83 @@ void FileSystem::exit(std::vector<std::string>& args)
 	programState = ProgramState::STOP_PROGRAM;
 }
 
-void FileSystem::cd(std::vector<std::string>& args)
+void FileSystem::clear(std::vector<std::string>& args)
 {
-	if (args.empty())
-	{
-		std::cout << "no argument specified" << "\n";
-		return;
-	}
-	
-	std::vector<std::string> directories = parser->split(args[0], CD_DIVIDER);
-
-	if (directories[0] == "") {
-		directories.erase(directories.begin());
-	}
-
-	for (auto it = directories.begin(); it != directories.end(); ++it) {
-		if (currentDir->isSubdirectoryExists(*it)) {
-			currentDir = currentDir->getSubdirectory(*it);
-		}
-		else {
-			std::cout << "path " << args[0] << " didn't exists" << "\n";
-			return;
-		}
-	}
-
+    std::cout << "\033[2J\033[H";
 }
+
+void FileSystem::help(std::vector<std::string>& args)
+{
+    std::cout << "\n";
+    std::cout << "----------------------------------------------------\n";
+    std::cout << "pwd: print working directory\n";
+    std::cout << "ls: list all subdirectories in current directory\n";
+    std::cout << "mkdir: create new directory\n";
+    std::cout << "exit: close program\n" ;
+    std::cout << "clear: clear console\n";
+    std::cout << "cd: change directory\n" ;
+    std::cout << "----------------------------------------------------\n";
+    std::cout << "\n";
+}
+
+void FileSystem::cd(std::vector<std::string>& args) {
+    if (args.empty()) {
+        std::cerr << "cd: missing argument\n";
+        return;
+    }
+
+    const std::string& path = args[0];
+
+    if (path == "/") {
+        currentDir = root;
+        return;
+    }
+
+    if (path == "..") {
+        if (currentDir != root) {
+            currentDir = currentDir->getParent();
+        }
+        return;
+    }
+
+    Directory* startDir = (path[0] == CD_DIVIDER) ? root : currentDir;
+
+    std::vector<std::string> directories = parser->split(path, CD_DIVIDER);
+    if (directories.empty()) {
+        return;
+    }
+    Directory* targetDir = navigatePath(startDir, directories);
+    if (targetDir != nullptr) {
+        currentDir = targetDir;
+    }
+    else {
+        std::cerr << "cd: no such file or directory: " << path << "\n";
+    }
+}
+
+Directory* FileSystem::navigatePath(Directory* startDir, const std::vector<std::string>& directories) {
+    Directory* dir = startDir;
+
+    for (const auto& name : directories) {
+        if (name.empty() || name == ".") {
+            continue; 
+        }
+
+        if (name == "..") {
+            if (dir->getParent() != nullptr) {
+                dir = dir->getParent();
+            }
+            continue;
+        }
+
+        if (dir->isSubdirectoryExists(name)) {
+            dir = dir->getSubdirectory(name);
+        }
+        else {
+            return nullptr; 
+        }
+    }
+
+    return dir;
+}
+

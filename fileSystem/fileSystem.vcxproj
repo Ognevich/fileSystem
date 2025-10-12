@@ -132,6 +132,7 @@
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.hpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="File.hpp" />
     <ClInclude Include="FileSystem.hpp" />
     <ClInclude Include="Parser.hpp" />
+    <ClInclude Include="Util.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

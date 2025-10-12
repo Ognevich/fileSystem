@@ -98,12 +98,12 @@ void FileSystem::help(std::vector<std::string>& args)
 {
     std::cout << "\n";
     std::cout << "----------------------------------------------------\n";
-    std::cout << "pwd: print working directory\n";
-    std::cout << "ls: list all subdirectories in current directory\n";
-    std::cout << "mkdir: create new directory\n";
-    std::cout << "exit: close program\n" ;
-    std::cout << "clear: clear console\n";
-    std::cout << "cd: change directory\n" ;
+    std::cout << "pwd:      print working directory\n";
+    std::cout << "ls:       list all subdirectories in current directory\n";
+    std::cout << "mkdir:    create new directory\n";
+    std::cout << "exit:     close program\n" ;
+    std::cout << "clear:    clear console\n";
+    std::cout << "cd:       change directory\n" ;
     std::cout << "----------------------------------------------------\n";
     std::cout << "\n";
 }

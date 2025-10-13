@@ -37,6 +37,7 @@ public:
 	void pwd(std::vector<std::string>& args);
 	void ls(std::vector<std::string>& args);
 	void mkdir(std::vector<std::string>& args);
+	void rmdir(std::vector<std::string>& args);
 	void exit(std::vector<std::string>& args);
 	void clear(std::vector<std::string>& args);
 	void help(std::vector<std::string>& args);

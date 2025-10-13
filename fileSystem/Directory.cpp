@@ -49,7 +49,7 @@ Directory* Directory::getSubdirectory(std::string name)
 		if (dir->name == name) {
 			return dir;
 		}
-	}
+	}		
 	return nullptr;
 }
 

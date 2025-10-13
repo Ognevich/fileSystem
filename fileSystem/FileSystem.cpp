@@ -21,6 +21,7 @@ void FileSystem::initCommands()
 	commands["pwd"] = [this](std::vector<std::string>& args) {pwd(args); };
 	commands["ls"] = [this](std::vector<std::string>& args) {ls(args); };
 	commands["mkdir"] = [this](std::vector<std::string>& args) {mkdir(args); };
+    commands["rmdir"] = [this](std::vector<std::string>& args) {rmdir(args); };
 	commands["exit"] = [this](std::vector<std::string>& args) {exit(args); };
 	commands["cd"] = [this](std::vector<std::string>& args) {cd(args); };
     commands["clear"] = [this](std::vector<std::string>& args) {clear(args); };
@@ -56,6 +57,7 @@ void FileSystem::update()
 
 }
 
+// ADD ABSOLUTE PATH INSTEAD OF RELATIVE
 void FileSystem::pwd(std::vector<std::string>& args)
 {
 	std::cout << currentDir->getName() << std::endl;
@@ -73,15 +75,51 @@ void FileSystem::ls(std::vector<std::string>& args)
 
 void FileSystem::mkdir(std::vector<std::string>& args)
 {
+
 	if (args.empty())
 	{
 		std::cout << "no argument specified" << "\n";
 		return;
 	}
 	
-	Directory* dir = new Directory(args[0], currentDir);
+    std::string path = args[0];
 
-	currentDir->addDirectory(dir);
+    Directory* startDir = (path[0] == SLASH_DIVIDER) ? root : currentDir;
+    std::vector<std::string> directories = parser->split(path, SLASH_DIVIDER);
+
+    if (directories.empty()) {
+        return;
+    }
+
+    std::string newFolderName = directories.back();
+    directories.pop_back();
+
+    for (const auto& name : directories) {
+        if (startDir->isSubdirectoryExists(name)) {
+            startDir = startDir->getSubdirectory(name);
+        }
+    }
+
+
+	Directory* dir = new Directory(newFolderName, startDir);
+
+    startDir->addDirectory(dir);
+}
+
+void FileSystem::rmdir(std::vector<std::string>& args)
+{
+    if (args.empty())
+    {
+        std::cout << "no argument specified" << "\n";
+        return;
+    }
+    if (args[0] == "root") {
+        std::cout << "you can't delete root directory" << "\n";
+        return;
+    }
+
+
+
 }
 
 void FileSystem::exit(std::vector<std::string>& args)
@@ -128,9 +166,9 @@ void FileSystem::cd(std::vector<std::string>& args) {
         return;
     }
 
-    Directory* startDir = (path[0] == CD_DIVIDER) ? root : currentDir;
+    Directory* startDir = (path[0] == SLASH_DIVIDER) ? root : currentDir;
 
-    std::vector<std::string> directories = parser->split(path, CD_DIVIDER);
+    std::vector<std::string> directories = parser->split(path, SLASH_DIVIDER);
     if (directories.empty()) {
         return;
     }

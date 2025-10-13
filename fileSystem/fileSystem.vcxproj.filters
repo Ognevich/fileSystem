@@ -16,6 +16,9 @@
     <Filter Include="Source Files\scr">
       <UniqueIdentifier>{fb5d10c5-e3ac-4b3a-8e1c-5f81ae52d862}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\scr\comands">
+      <UniqueIdentifier>{a657c25b-cf92-48fb-a663-7b2af21d84d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,6 +39,9 @@
     <ClCompile Include="Util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CdCommand.cpp">
+      <Filter>Source Files\scr\comands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Directory.hpp">
@@ -55,6 +61,33 @@
     </ClInclude>
     <ClInclude Include="Util.hpp">
       <Filter>Source Files\scr</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.hpp">
+      <Filter>Source Files\scr\comands</Filter>
+    </ClInclude>
+    <ClInclude Include="MkdirCommand.hpp">
+      <Filter>Source Files\scr\comands</Filter>
+    </ClInclude>
+    <ClInclude Include="pwdCommand.hpp">
+      <Filter>Source Files\scr\comands</Filter>
+    </ClInclude>
+    <ClInclude Include="LsCommand.hpp">
+      <Filter>Source Files\scr\comands</Filter>
+    </ClInclude>
+    <ClInclude Include="RmdirCommand.hpp">
+      <Filter>Source Files\scr\comands</Filter>
+    </ClInclude>
+    <ClInclude Include="HelpCommand.hpp">
+      <Filter>Source Files\scr\comands</Filter>
+    </ClInclude>
+    <ClInclude Include="ClearCommand.hpp">
+      <Filter>Source Files\scr\comands</Filter>
+    </ClInclude>
+    <ClInclude Include="CdCommand.hpp">
+      <Filter>Source Files\scr\comands</Filter>
+    </ClInclude>
+    <ClInclude Include="ExitCommand.hpp">
+      <Filter>Source Files\scr\comands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

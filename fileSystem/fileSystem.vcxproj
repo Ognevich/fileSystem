@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CdCommand.cpp" />
     <ClCompile Include="Directory.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FileSystem.cpp" />
@@ -135,11 +136,20 @@
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CdCommand.hpp" />
+    <ClInclude Include="ClearCommand.hpp" />
+    <ClInclude Include="Command.hpp" />
     <ClInclude Include="Config.hpp" />
     <ClInclude Include="Directory.hpp" />
+    <ClInclude Include="ExitCommand.hpp" />
     <ClInclude Include="File.hpp" />
     <ClInclude Include="FileSystem.hpp" />
+    <ClInclude Include="HelpCommand.hpp" />
+    <ClInclude Include="LsCommand.hpp" />
+    <ClInclude Include="MkdirCommand.hpp" />
     <ClInclude Include="Parser.hpp" />
+    <ClInclude Include="pwdCommand.hpp" />
+    <ClInclude Include="RmdirCommand.hpp" />
     <ClInclude Include="Util.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

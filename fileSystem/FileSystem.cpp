@@ -1,4 +1,12 @@
 #include "FileSystem.hpp"
+#include "MkdirCommand.hpp"
+#include "pwdCommand.hpp"
+#include "RmdirCommand.hpp"
+#include "LsCommand.hpp"
+#include "HelpCommand.hpp"
+#include "ClearCommand.hpp"
+#include "CdCommand.hpp"
+#include "ExitCommand.hpp"
 
 FileSystem::FileSystem()
 	: root(new Directory("root", nullptr)), 
@@ -18,14 +26,14 @@ FileSystem::~FileSystem()
 
 void FileSystem::initCommands()
 {
-	commands["pwd"] = [this](std::vector<std::string>& args) {pwd(args); };
-	commands["ls"] = [this](std::vector<std::string>& args) {ls(args); };
-	commands["mkdir"] = [this](std::vector<std::string>& args) {mkdir(args); };
-    commands["rmdir"] = [this](std::vector<std::string>& args) {rmdir(args); };
-	commands["exit"] = [this](std::vector<std::string>& args) {exit(args); };
-	commands["cd"] = [this](std::vector<std::string>& args) {cd(args); };
-    commands["clear"] = [this](std::vector<std::string>& args) {clear(args); };
-    commands["help"] = [this](std::vector<std::string>& args) {help(args); };
+    registerCommand(std::make_unique<MkdirCommand>());
+    registerCommand(std::make_unique<PwdCommand>());
+    registerCommand(std::make_unique<RmdirCommand>());
+    registerCommand(std::make_unique<LsCommand>());
+    registerCommand(std::make_unique<HelpCommand>());
+    registerCommand(std::make_unique<ClearCommand>());
+	registerCommand(std::make_unique<CDCommand>());
+	registerCommand(std::make_unique<ExitCommand>());
 }
 
 void FileSystem::run()
@@ -49,7 +57,7 @@ void FileSystem::update()
 	args.erase(args.begin());
 
 	if (commands.contains(command)) {
-		commands[command](args);
+		commands[command]->execute(*this,args);
 	}
 	else {
 		std::cout << "unknown command " << command << "\n";
@@ -57,153 +65,36 @@ void FileSystem::update()
 
 }
 
-// ADD ABSOLUTE PATH INSTEAD OF RELATIVE
-void FileSystem::pwd(std::vector<std::string>& args)
+Directory* FileSystem::getRoot()
 {
-	std::cout << currentDir->getName() << std::endl;
+    return root;
 }
 
-void FileSystem::ls(std::vector<std::string>& args)
+std::shared_ptr<Parser> FileSystem::getParser()
 {
-	std::vector<Directory*> subdirectories = currentDir->getSubdirectories();
-
-	for (auto it = subdirectories.begin(); it != subdirectories.end(); ++it) {
-		std::cout << (*it)->getName() << "\t";
-	}
-	std::cout << "\n";
+    return parser;
 }
 
-void FileSystem::mkdir(std::vector<std::string>& args)
+Directory* FileSystem::getCurrentDir()
 {
-
-	if (args.empty())
-	{
-		std::cout << "no argument specified" << "\n";
-		return;
-	}
-	
-    std::string path = args[0];
-
-    Directory* startDir = (path[0] == SLASH_DIVIDER) ? root : currentDir;
-    std::vector<std::string> directories = parser->split(path, SLASH_DIVIDER);
-
-    if (directories.empty()) {
-        return;
-    }
-
-    std::string newFolderName = directories.back();
-    directories.pop_back();
-
-    for (const auto& name : directories) {
-        if (startDir->isSubdirectoryExists(name)) {
-            startDir = startDir->getSubdirectory(name);
-        }
-    }
-
-
-	Directory* dir = new Directory(newFolderName, startDir);
-
-    startDir->addDirectory(dir);
+    return currentDir;
 }
 
-void FileSystem::rmdir(std::vector<std::string>& args)
+FileSystem::ProgramState FileSystem::getProgramState() {
+	return programState;
+}
+
+void FileSystem::setCurrentDir(Directory* dir)
 {
-    if (args.empty())
-    {
-        std::cout << "no argument specified" << "\n";
-        return;
-    }
-    if (args[0] == "root") {
-        std::cout << "you can't delete root directory" << "\n";
-        return;
-    }
-
-
-
+    currentDir = dir;
 }
 
-void FileSystem::exit(std::vector<std::string>& args)
+void FileSystem::stopProgram()
 {
-	programState = ProgramState::STOP_PROGRAM;
+	this->programState = ProgramState::STOP_PROGRAM;
 }
 
-void FileSystem::clear(std::vector<std::string>& args)
+void FileSystem::registerCommand(std::unique_ptr<Command> cmd)
 {
-    std::cout << "\033[2J\033[H";
+    commands[cmd->name()] = std::move(cmd);
 }
-
-void FileSystem::help(std::vector<std::string>& args)
-{
-    std::cout << "\n";
-    std::cout << "----------------------------------------------------\n";
-    std::cout << "pwd:      print working directory\n";
-    std::cout << "ls:       list all subdirectories in current directory\n";
-    std::cout << "mkdir:    create new directory\n";
-    std::cout << "exit:     close program\n" ;
-    std::cout << "clear:    clear console\n";
-    std::cout << "cd:       change directory\n" ;
-    std::cout << "----------------------------------------------------\n";
-    std::cout << "\n";
-}
-
-void FileSystem::cd(std::vector<std::string>& args) {
-    if (args.empty()) {
-        std::cerr << "cd: missing argument\n";
-        return;
-    }
-
-    const std::string& path = args[0];
-
-    if (path == "/") {
-        currentDir = root;
-        return;
-    }
-
-    if (path == "..") {
-        if (currentDir != root) {
-            currentDir = currentDir->getParent();
-        }
-        return;
-    }
-
-    Directory* startDir = (path[0] == SLASH_DIVIDER) ? root : currentDir;
-
-    std::vector<std::string> directories = parser->split(path, SLASH_DIVIDER);
-    if (directories.empty()) {
-        return;
-    }
-    Directory* targetDir = navigatePath(startDir, directories);
-    if (targetDir != nullptr) {
-        currentDir = targetDir;
-    }
-    else {
-        std::cerr << "cd: no such file or directory: " << path << "\n";
-    }
-}
-
-Directory* FileSystem::navigatePath(Directory* startDir, const std::vector<std::string>& directories) {
-    Directory* dir = startDir;
-
-    for (const auto& name : directories) {
-        if (name.empty() || name == ".") {
-            continue; 
-        }
-
-        if (name == "..") {
-            if (dir->getParent() != nullptr) {
-                dir = dir->getParent();
-            }
-            continue;
-        }
-
-        if (dir->isSubdirectoryExists(name)) {
-            dir = dir->getSubdirectory(name);
-        }
-        else {
-            return nullptr; 
-        }
-    }
-
-    return dir;
-}
-

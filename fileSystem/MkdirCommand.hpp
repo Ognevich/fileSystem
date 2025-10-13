@@ -6,6 +6,9 @@
 
 class MkdirCommand : public Command {
 public:	
+
+    // DIVIDE EXECUTE ONTO SMALLER FUNCTIONS
+
 	std::string name() const override { return "mkdir"; }
 
 	void execute(FileSystem& fs, std::vector<std::string>& args) override {
@@ -27,9 +30,18 @@ public:
         }
 
         std::string newFolderName = directories.back();
+
         directories.pop_back();
 
         for (const auto& name : directories) {
+
+            if (name == "..") {
+                if (startDir->getParent() != nullptr) {
+                    startDir = startDir->getParent();
+                    continue;
+                }
+            }
+
             if (startDir->isSubdirectoryExists(name)) {
                 startDir = startDir->getSubdirectory(name);
             }

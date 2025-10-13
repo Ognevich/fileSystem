@@ -21,6 +21,7 @@ public:
 
 	void addFile(File * file);
 	void addDirectory(Directory* dir);
+	bool deleteDirectory(std::string dirName);
 
 	std::vector<Directory*> getSubdirectories();
 	Directory* getSubdirectory(std::string name);

@@ -1,4 +1,5 @@
 ﻿  CdCommand.cpp
+  Directory.cpp
   FileSystem.cpp
   main.cpp
   Generating Code...

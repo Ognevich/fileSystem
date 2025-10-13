@@ -38,6 +38,18 @@ void Directory::addDirectory(Directory* dir)
 	subdirectories.push_back(dir);
 }
 
+bool Directory::deleteDirectory(std::string dirName)
+{
+	for (auto it = subdirectories.begin(); it != subdirectories.end(); ++it) {
+		if ((*it)->getName() == dirName) {
+			delete* it; 
+			subdirectories.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+
 std::vector<Directory*> Directory::getSubdirectories()
 {
 	return this->subdirectories;
